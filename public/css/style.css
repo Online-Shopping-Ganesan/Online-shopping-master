@@ -1,0 +1,124 @@
+body,
+html {
+  height: 100%;
+}
+/* workaround modal-open padding issue */
+
+body.modal-open {
+  padding-right: 0 !important;
+}
+
+#sidebar {
+  padding-left: 0;
+}
+/*
+* Off Canvas at medium breakpoint
+* --------------------------------------------------
+*/
+
+@media screen and (max-width: 48em) {
+  .row-offcanvas {
+	position: relative;
+	-webkit-transition: all 0.25s ease-out;
+	-moz-transition: all 0.25s ease-out;
+	transition: all 0.25s ease-out;
+  }
+  .row-offcanvas-left .sidebar-offcanvas {
+	left: -33%;
+  }
+  .row-offcanvas-left.active {
+	left: 33%;
+	margin-left: -6px;
+  }
+  .sidebar-offcanvas {
+	position: absolute;
+	top: 0;
+	width: 33%;
+	height: 100%;
+  }
+}
+/*
+* Off Canvas wider at sm breakpoint
+* --------------------------------------------------
+*/
+
+@media screen and (max-width: 34em) {
+  .row-offcanvas-left .sidebar-offcanvas {
+	left: -45%;
+  }
+  .row-offcanvas-left.active {
+	left: 45%;
+	margin-left: -6px;
+  }
+  .sidebar-offcanvas {
+	width: 45%;
+  }
+}
+
+.card {
+  overflow: hidden;
+}
+
+.card-block .rotate {
+  z-index: 8;
+  float: right;
+  height: 100%;
+}
+
+.card-block .rotate i {
+  color: rgba(20, 20, 20, 0.15);
+  position: absolute;
+  left: 0;
+  left: auto;
+  right: -10px;
+  bottom: 0;
+  display: block;
+  -webkit-transform: rotate(-44deg);
+  -moz-transform: rotate(-44deg);
+  -o-transform: rotate(-44deg);
+  -ms-transform: rotate(-44deg);
+  transform: rotate(-44deg);
+}
+	
+.login-form {
+    width: 340px;
+    margin: 50px auto;
+  	font-size: 15px;
+}
+.login-form form {
+    margin-bottom: 15px;
+    background: #f7f7f7;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    padding: 30px;
+}
+.login-form h2 {
+    margin: 0 0 15px;
+}
+.form-control, .btn {
+    min-height: 38px;
+    border-radius: 2px;
+}
+.btn {        
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.pad-10{
+	padding: 10px
+}
+
+.text-align {
+	text-align: center !important;
+}
+
+.margin-rigth-2{
+	margin-right: 2%;
+}
+
+.margin-top-25{
+	margin-top: 25px;
+}
+
+.margin-bottom-25{
+	margin-bottom: 25px;
+}

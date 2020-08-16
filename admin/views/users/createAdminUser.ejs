@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include ("../partials/head") %>  
+</head>
+
+<body>
+  <%- include ("../partials/header") %>
+  <div class="container-fluid" id="main">
+    <div class="row row-offcanvas row-offcanvas-left">
+      <%- include ("../partials/sidebar") %>  
+
+      <div class="col-md-9 col-lg-10 main">
+		<div class="row">
+        	<div class="col-md-9 col-lg-9"><h3 class="display-3 hidden-xs-down"> <%= locals.body.editProfile === 'true' ? 'Edit Profile' : (locals.body.id ? 'Edit Admin Users' : 'Create  Admin Users')  %> </h3></div>
+        </div>
+        <div class="col-lg-12 mb-12">
+        	<% if ( locals.msg) { %> 
+	        	<div class="alert <%= locals.error ? 'alert-danger' : 'alert-success' %>" role="alert"><%- locals.msg %></div>   
+	        <% } %> 
+          	<form  class="needs-validation" novalidate method="post" action="<%= locals.body.id ? '/admin/updateAdminUser' : '/admin/createAdminUser' %>">
+				  <div class="form-group">
+				      <label for="f_name">First Name:</label>
+				      <input type="text" class="form-control" id="f_name" placeholder="Enter First Name" name="f_name" maxlength="64" value="<%= locals.body.f_name %>" required>
+				      <div class="valid-feedback">Valid.</div>
+				      <div class="invalid-feedback">Please fill out this field.</div>
+				  </div>
+				  <div class="form-group">
+				      <label for="l_name">Last Name:</label>
+				      <input type="text" class="form-control" id="l_name" placeholder="Enter Last Name" name="l_name" value="<%= locals.body.l_name %>" maxlength="64" required>
+				      <div class="valid-feedback">Valid.</div>
+				      <div class="invalid-feedback">Please fill out this field.</div>
+				  </div>
+				  <div class="form-group">
+				      <label for="email">Email:</label>
+				      <input type="email" class="form-control" id="email" placeholder="Enter Email" name="email" value="<%= locals.body.email %>" maxlength="64" required>
+				      <div class="valid-feedback">Valid.</div>
+				      <div class="invalid-feedback">Please fill out this field.</div>
+				  </div>
+				  <div class="form-group">
+				      <label for="u_name">User Name:</label>
+				      <input type="text" class="form-control" id="u_name" placeholder="Enter User Name" name="u_name" value="<%= locals.body.u_name %>" maxlength="32" required>
+				      <div class="valid-feedback">Valid.</div>
+				      <div class="invalid-feedback">Please fill out this field.</div>
+				  </div>
+				  <div class="form-group">
+				      <label for="pwd">Password:</label>
+				      <input type="password" class="form-control" id="pwd" name="pwd">
+				      <div class="valid-feedback">Valid.</div>
+				      <div class="invalid-feedback">Please fill out this field.</div>
+				  </div>
+				  <div class="form-group">
+				      <label for="confirmPwd">Confirm Password:</label>
+				      <input type="password" class="form-control" id="confirmPwd" name="confirmPwd" maxlength="16">
+				      <div class="valid-feedback">Valid.</div>
+				      <div class="invalid-feedback">Please fill out this field.</div>
+				  </div>
+				  <% if(locals.body.editProfile !== 'true') { %>
+					  <div class="form-group row">
+						  <div class="col-sm-1">Admin</div>
+						    <div class="col-sm-11">
+						      <div class="form-check">
+						        <input class="form-check-input" type="checkbox" name="is_admin" <%= (locals.body.is_admin == 'on' || locals.body.is_admin == 1) ? 'checked' : '' %> id="is_admin">
+						      </div>
+						  </div>
+					  </div>
+					  <div class="form-group row">
+						  <div class="col-sm-1">Active</div>
+						    <div class="col-sm-11">
+						      <div class="form-check">
+						        <input class="form-check-input" type="checkbox" name="active" <%= (locals.body.active == 'on' || locals.body.active == 1) ? 'checked' : '' %> id="active">
+						      </div>
+						  </div>
+					  </div>
+				  <% } else { %>
+				  	  <input type="hidden" name="is_admin" value="<%= (locals.body.is_admin == 'on' || locals.body.is_admin == 1) ? 'on' : 'off' %>">
+				  	  <input type="hidden" name="active" value="<%= (locals.body.active == 'on' || locals.body.active == 1) ? 'on' : 'off' %>">
+				  <% } %>
+				  <input type="hidden" name="id" value="<%= locals.body.id %>" />
+				  <input type="hidden" name="editProfile" value="<%= locals.body.editProfile %>" />
+				  <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
+				  <button type="submit" class="btn btn-primary"><%= locals.body.id ? 'Update' : 'Submit' %></button>
+				  <% if(locals.body.editProfile !== 'true') { %>
+				  	<a type="button" href="/admin/adminUsersList" class="btn btn-danger">Cancel</a>
+				  <% } %>
+				  <div class="form-group">
+				  		<label class="text-danger">Note: Only server side validation</label>
+				  </div>
+			</form>
+        </div>
+      </div>
+  </div>
+  <footer class="container-fluid">
+    <%- include ("../partials/footer") %>
+  </footer>
+<script>
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    // Get the forms we want to add validation styles to
+    var forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+</script>
+</body>
+
+</html>

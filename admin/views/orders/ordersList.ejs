@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include ("../partials/head") %>  
+</head>
+
+<body>
+  <%- include ("../partials/header") %>
+  <div class="container-fluid" id="main">
+    <div class="row row-offcanvas row-offcanvas-left">
+      <%- include ("../partials/sidebar") %>  
+	  
+	  <div class="col-md-9 col-lg-10 main">
+		<div class="row">
+        	<div class="col-md-9 col-lg-9"><h3 class="display-3 hidden-xs-down"> Orders List </h3></div>
+        </div>
+        <div>
+        	 <% if ( locals.error) { %> 
+	        	<div class="alert alert-danger col-lg-12" role="alert"><%= locals.error %></div>   
+	        <% } %> 
+          	<table id="adminUserTbl" class="table table-striped table-bordered dataTable" cellspacing="0" width="100%" role="grid" aria-describedby="example_info" style="width: 100%;">
+			  <thead>
+			    <tr>
+			      <th scope="col" style="width: 15%">Order No</th>
+			      <th scope="col" style="width: 20%;">Customer</th>
+			      <th scope="col" style="width: 10%;">Order By</th>
+			      <th scope="col" style="width: 16%;">Order Amount</th>
+			      <th scope="col" style="width: 10%;">Status</th>
+			      <th scope="col" style="width: 24%;">Created Date</th>
+			      <th scope="col" style="width: 10%;">Action</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			  <% locals.data && locals.data.forEach(function(row) { %>
+			    <tr>
+			      <th scope="row"><%= row.ord_no %></th>
+			      <td><%= row.customer_name %></td>
+			      <td><%= row.customer_type %></td>
+			      <td>₹<%= row.ord_tot_amt %></td>
+			      <td><%= row.order_status %></td>
+			      <td><%= new Date(row.date_of_creation).toDateString()+' '+new Date(row.date_of_creation).toLocaleTimeString() %></td>
+			      <td>
+			      	<button type="button" onclick="location.href='/admin/editOrder/<%= row.ord_no %>'" class="btn btn-success"><i class="fa fa-eye" aria-hidden="true"></i></button>
+            	  </td>
+			    </tr>
+			  <% }); %>
+			  </tbody>
+			</table>
+        </div>
+      </div>
+  </div>
+  <footer class="container-fluid">
+    <%- include ("../partials/footer") %>
+  </footer>
+<script>
+$(document).ready(function() {
+  $('#userDelConfirmationDialog').on('show.bs.modal', function (event) {
+	  var myVal = $(event.relatedTarget).data('val');
+	  var adminUserId = $(event.relatedTarget).data('id');
+	  $(this).find("#adminUserId").val(adminUserId);
+	  $(this).find(".modal-body").text('Are you sure want to delete the user '+myVal+'?');
+  });
+  
+  $("#adminUserTbl").DataTable({
+    aaSorting: [],
+    responsive: true,
+
+    columnDefs: [
+      {
+        responsivePriority: 1,
+        targets: 0
+      },
+      {
+        responsivePriority: 2,
+        targets: -1
+      }
+    ]
+  });
+
+  $(".dataTables_filter input")
+    .attr("placeholder", "Search here...")
+    .css({
+      width: "300px",
+      display: "inline-block"
+    });
+
+  $('[data-toggle="tooltip"]').tooltip();
+});
+</script>
+</body>
+
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include ("../partials/head") %>  
+</head>
+
+<body>
+  <%- include ("../partials/header") %>
+  <div class="container-fluid" id="main">
+    <div class="row row-offcanvas row-offcanvas-left">
+      <%- include ("../partials/sidebar") %>  
+
+      <div class="col-md-9 col-lg-10 main">
+		<div class="row">
+        	<div class="col-md-9 col-lg-9"><h3 class="display-3 hidden-xs-down"> <%= locals.body.editProfile === 'true' ? 'Edit Profile' : (locals.body.id ? 'Edit ' : 'Create ')  %>Product</h3></div>
+        </div>
+        <div class="col-lg-12 mb-12">
+        	<% if ( locals.msg) { %> 
+	        	<div class="alert <%= locals.error ? 'alert-danger' : 'alert-success' %>" role="alert"><%- locals.msg %></div>   
+	        <% } %> 
+          	<form  class="needs-validation" novalidate method="post" action="<%= locals.body.id ? '/admin/updateProduct?_csrf='+locals.csrfToken : '/admin/createProducts?_csrf='+locals.csrfToken %>" enctype="multipart/form-data">
+				  <div class="form-group">
+				      <label for="prod_cate_id">Category:</label>
+				      <select name="prod_cate_id" class="form-control" id="prod_cate_id" name="prod_cate_id" value="<%= locals.body.prod_cate_id %>" required>
+				      		<% locals.category && locals.category.map(function(obj){ %>
+							    <option <%= locals.body.prod_cate_id == obj.id ? 'selected' : '' %> value='<%= obj.id %>'><%= obj.name %></option>
+							<%  }) %>
+				      </select>
+				      <div class="valid-feedback">Valid.</div>
+				      <div class="invalid-feedback">Please fill out this field.</div>
+				  </div>
+				  <div class="form-group">
+				  	  <label for="prod_brand_id">Brands:</label>
+				      <select name="prod_brand_id" class="form-control" id="prod_brand_id" name="prod_brand_id" value="<%= locals.body.prod_brand_id %>" required>
+				      		<% locals.brands && locals.brands.map(function(obj){ %>
+							    <option <%= locals.body.prod_brand_id == obj.id ? 'selected' : '' %> value='<%= obj.id %>'><%= obj.name %></option>
+							<%  }) %>
+				      </select>
+				  </div>
+				  <div class="form-group">
+				      <label for="prod_name">Name:</label>
+				      <input type="text" class="form-control" id="prod_name" placeholder="Product Name" name="prod_name" value="<%= locals.body.prod_name %>" maxlength="64" required>
+				      <div class="valid-feedback">Valid.</div>
+				      <div class="invalid-feedback">Please fill out this field.</div>
+				  </div>
+				  <div class="form-group">
+				      <label for="prod_desc">Description:</label>
+				      <textarea class="form-control" id="prod_desc" placeholder="Product Description" name="prod_desc" maxlength="1024" required><%= locals.body.prod_desc %></textarea>
+				      <div class="valid-feedback">Valid.</div>
+				      <div class="invalid-feedback">Please fill out this field.</div>
+				  </div>
+				  <div class="form-group">
+				      <label for="prod_meta_keyword">Meta Keywords:</label>
+				      <textarea class="form-control" id="prod_meta_keyword" placeholder="Meta Keywords" name="prod_meta_keyword" maxlength="256" required><%= locals.body.prod_meta_keyword %></textarea>
+				      <div class="valid-feedback">Valid.</div>
+				      <div class="invalid-feedback">Please fill out this field.</div>
+				  </div>
+				  <div class="form-group">
+				      <label for="prod_meta_desc">Meta Description:</label>
+				      <textarea class="form-control" id="prod_meta_desc" placeholder="Meta Description" name="prod_meta_desc" maxlength="256" required><%= locals.body.prod_meta_desc %></textarea>
+				      <div class="valid-feedback">Valid.</div>
+				      <div class="invalid-feedback">Please fill out this field.</div>
+				  </div>
+				  <div class="form-group">
+				  		<div id="prodPriceQtyDtls">
+					  		<div class="row">
+					  			<div class="col-lg-3">Size</div>
+					  			<div class="col-lg-3">Qty</div>
+					  			<div class="col-lg-3">Price/Qty</div>
+					  			<div class="col-lg-3"><button type="button" class="btn btn-primary" onclick="addProdQtyPriceDtl()">Add</button></div>
+					  		</div>
+					  		<% if(!locals.body.prod_size){
+					  				locals.body = {prod_size:['S'], prod_avail_qty:[],  prod_price:[]};
+					  			}; 
+					  			locals.body.prod_size.map(function(size, index){ %>
+						  		<div class="row mb-1">
+						  			<div class="col-lg-3">
+						  				<select class="form-control" name="prod_size[]" value="<%= size %>" <%= index == 0 ? 'required' : '' %>>
+									      		<% locals.category && locals.size.map(function(val){ %>
+												    <option <%= val == size ? 'selected' : '' %> value='<%= val %>'><%= val %></option>
+												<% }) %>
+									    </select>
+						  			</div>
+						  			<div class="col-lg-3"><input type="number" value="<%= locals.body.prod_avail_qty[index] %>" class="form-control" name="prod_avail_qty[]"  <%= index == 0 ? 'required' : '' %>></div>
+						  			<div class="col-lg-3"><input type="number" value="<%= locals.body.prod_price[index] %>" class="form-control" step="0.01" name="prod_price[]"  <%= index == 0 ? 'required' : '' %>></div>
+						  		</div>
+					  		<% }) %>
+				  		</div>
+				  </div>
+				  <div class="form-group row">
+					  <div class="col-sm-1">Active</div>
+					    <div class="col-sm-11">
+					      <div class="form-check">
+					        <input class="form-check-input" type="checkbox" name="active" <%= (locals.body.active == 'on' || locals.body.active == 1) ? 'checked' : '' %> id="active">
+					      </div>
+					  </div>
+				  </div>
+				  <div class="form-group">
+				      <label for="prod_name">Image:</label>
+				      <input type="file" id="prod_img" name="prod_img" <%= locals.body.id > 0 ? '' : 'required' %>>
+				      <div class="valid-feedback">Valid.</div>
+				      <div class="invalid-feedback">Please fill out this field.</div>
+				  </div>
+				  <% if(locals.user && (locals.user.is_admin === 1 || !locals.body.id || locals.body.created_by == locals.user.id)) { %>
+				  <input type="hidden" name="created_by" value="<%= locals.body.created_by %>" />
+				  <input type="hidden" name="id" value="<%= locals.body.id %>" />
+				  <button type="submit" class="btn btn-primary"><%= locals.body.id ? 'Update' : 'Submit' %></button>
+				  <% } %>
+				  <a href="/admin/productsList" class="btn btn-danger">Cancel</a>
+				  <div class="form-group">
+				  		<label class="text-danger">Note: Only server side validation</label>
+				  </div>
+			</form>
+        </div>
+      </div>
+  </div>
+  <footer class="container-fluid">
+    <%- include ("../partials/footer") %>
+  </footer>
+<script>
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    // Get the forms we want to add validation styles to
+    var forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+
+
+function addProdQtyPriceDtl(){
+    var cnt = $($("#prodPriceQtyDtls").find('.row')).length;
+	if(cnt < 6){
+		const prodPriceQtyDtls = $($("#prodPriceQtyDtls").find('.row')[1]).clone();
+		$(prodPriceQtyDtls).find('input,select').removeAttr("required");
+		$(prodPriceQtyDtls).find('input').val('');
+		$("#prodPriceQtyDtls").append(prodPriceQtyDtls);
+	}
+}
+</script>
+</body>
+
+</html>

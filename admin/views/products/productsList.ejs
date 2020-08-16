@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include ("../partials/head") %>  
+</head>
+
+<body>
+  <%- include ("../partials/header") %>
+  <div class="container-fluid" id="main">
+    <div class="row row-offcanvas row-offcanvas-left">
+      <%- include ("../partials/sidebar") %>  
+	  
+	  <div class="modal fade" id="userDelConfirmationDialog" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLabel">Product Delete</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        
+		      </div>
+		      <div class="modal-footer">
+		      	<form action="/admin/deleteProducts/" method="POST"  enctype="application/x-www-form-urlencoded">
+		      		<input type="hidden" name="_method" value="DELETE">
+  					<input id="productId" type="hidden" name="productId" /><br />
+  					<input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
+			        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			        <button type="submit" class="btn btn-primary">Delete</button>
+			     </form>
+		      </div>
+		    </div>
+		  </div>
+	  </div>
+	  
+	  
+      <div class="col-md-9 col-lg-10 main">
+		<div class="row">
+        	<div class="col-md-9 col-lg-9"><h3 class="display-3 hidden-xs-down"> Products List </h3></div>
+        	<div class="col-md-3 col-lg-3 mt-3"><a type="button" href="/admin/createProducts" class="btn btn-primary float-sm-right float-lg-right"><span>Add</span></a></div>
+        </div>
+        <div>
+        	 <% if ( locals.error) { %> 
+	        	<div class="alert alert-danger col-lg-12" role="alert"><%= locals.error %></div>   
+	        <% } %> 
+          	<table id="dynamicTBl" class="table table-striped table-bordered dataTable" cellspacing="0" width="100%" role="grid" aria-describedby="example_info" style="width: 100%;">
+			  <thead>
+			    <tr>
+			      <th scope="col" style="width: 15%">Category</th>
+			      <th scope="col" style="width: 15%;">Product Name</th>
+			      <th scope="col" style="width: 30%;">Brand</th>
+			      <th scope="col" style="width: 15%;">Created By</th>
+			      <th scope="col" style="width: 10%;">Active</th>
+			      <th scope="col" style="width: 15%;">Action</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			  <% locals.data && locals.data.forEach(function(row) { %>
+			    <tr>
+			      <th scope="row"><%= row.ProductsCate.get('cateName') %></th>
+			      <td><%= row.prod_name %></td>
+			      <td><%= row.ProductsBrand.get('brandName') %></td>
+			      <td><%= row.createdBy.get('createdByName') %></td>
+			      <td><span class="<%= row.active ? 'text-primary' : 'text-danger' %>"> <%= row.active == 1 ? 'Active' : 'Inactive' %></span></td>
+			      <td>
+			      	
+				      	<button type="button" onclick="location.href='/admin/editProduct/<%= row.id %>'" class="btn btn-success"><i class="fa fa-edit" aria-hidden="true"></i></button>
+				    <% if(locals.user && (locals.user.is_admin === 1 || row.created_by === locals.user.id)) { %>
+				      	<button type="button" class="btn btn-danger"  data-toggle="modal" data-id="<%= row.id %>"  data-val="<%= row.prod_name %>" data-target="#userDelConfirmationDialog"><i class="fa fa-trash" aria-hidden="true"></i></button>
+            		<% } %>
+            	   </td>
+			    </tr>
+			  <% }); %>
+			  </tbody>
+			</table>
+        </div>
+      </div>
+  </div>
+  <footer class="container-fluid">
+    <%- include ("../partials/footer") %>
+  </footer>
+<script>
+$(document).ready(function() {
+  $('#userDelConfirmationDialog').on('show.bs.modal', function (event) {
+	  var myVal = $(event.relatedTarget).data('val');
+	  var productId = $(event.relatedTarget).data('id');
+	  $(this).find("#productId").val(productId);
+	  $(this).find(".modal-body").text('Are you sure want to delete the product '+myVal+'?');
+  });
+  
+  $("#dynamicTBl").DataTable({
+    aaSorting: [],
+    responsive: true,
+
+    columnDefs: [
+      {
+        responsivePriority: 1,
+        targets: 0
+      },
+      {
+        responsivePriority: 2,
+        targets: -1
+      }
+    ]
+  });
+
+  $(".dataTables_filter input")
+    .attr("placeholder", "Search here...")
+    .css({
+      width: "300px",
+      display: "inline-block"
+    });
+
+  $('[data-toggle="tooltip"]').tooltip();
+});
+</script>
+</body>
+
+</html>

@@ -1,0 +1,18 @@
+<nav class="navbar navbar-fixed-top navbar-toggleable-sm navbar-inverse bg-primary mb-3">
+    <div class="flex-row d-flex">
+      <a class="navbar-brand mb-1 text-white" href="/admin/dashboard">Online Shopping</a>
+    </div>
+    <% if(locals.user) { %>
+    <div class="dropdown ml-auto">
+	  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+	     <%= locals.user.f_name+ ' '+locals.user.l_name %>
+	  </button>
+	  <div class="dropdown-menu">
+	    <a class="dropdown-item" href="logout">Logout</a>
+	    <a class="dropdown-item" href="/admin/editProfile/<%= locals.user.id %>">Profile</a>
+	  </div>
+	</div>
+	<% } %>
+    
+</nav>
+  
