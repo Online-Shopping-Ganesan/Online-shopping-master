@@ -1,7 +1,7 @@
 # Online-shopping-master
 <h3>Technology Stack:</h3>
 <ol>
-<li>React 16.3.1</li>
+<li>React 16.13.1</li>
 <li>Redux 4.0.5</li>
 <li>Redux Thunk 2.3.0</li>
 <li>MySQL</li>
@@ -28,6 +28,7 @@ Non-Admin users are considered Sales Users, who don’t have access to Admin Use
 <li>Multer: Used for file upload and product page.</li>
 <li>Nodemailer: Used to send email.</li>
 <li>Sharp: Used to compress the image size.</li>
+<li>Sequelize: Used to ORM.</li>
 </ol>
 <b>Client page</b>
 <ol>
@@ -48,5 +49,6 @@ Non-Admin users are considered Sales Users, who don’t have access to Admin Use
 <li>Default Port for Client Page is 8080, and can be accessed at http://localhost:8080/</li>
 <li>Replace index.js file in “\node_modules\csurf” with file provided in \etc folder.</li>
 <li>For Mail setup, please configure GMAIL User Name and password in .env file</li>
+<li>For DB configuration, please configure in config/db.js file</li>
 </ol>
 
